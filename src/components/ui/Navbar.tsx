@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { UserAvatar } from "../UserAvatar";
 import { Input } from "./Input";
 import { Mail, Bell, Menu, X } from "lucide-react";
 
@@ -41,6 +42,7 @@ export default function Navbar() {
           <button className="p-1 border-2 border-transparent hover:border-on-surface hover:shadow-hard-sm cursor-pointer transition-none">
             <Bell size={18} />
           </button>
+          <UserAvatar />
         </div>
 
         {/* Mobile  */}
@@ -98,6 +100,7 @@ export default function Navbar() {
           <button className="hover:text-primary cursor-pointer">
             <Bell />
           </button>
+          <UserAvatar />
         </div>
       </div>
     </header>
