@@ -4,12 +4,10 @@ import Link from "next/link";
 import { UserAvatar } from "../UserAvatar";
 import { Input } from "./Input";
 import { Mail, Bell, Menu, X } from "lucide-react";
-
-const NAV_LINKS = ["Browse", "Forums", "Users", "Archive"];
+const NAV_LINKS = ["browse", "forums", "users", "archive"];
 
 export default function Navbar() {
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
-
   return (
     <header className="sticky top-0 z-30 bg-surface-lowest border-b-2 border-on-surface">
       <section className="px-4 h-14 grid grid-cols-2 md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
@@ -23,7 +21,7 @@ export default function Navbar() {
           {NAV_LINKS.map((item) => (
             <Link
               key={item}
-              href=""
+              href={item}
               className="px-3 py-1 border-2 border-transparent hover:border-on-surface hover:shadow-hard-sm hover:bg-surface-low transition-none"
             >
               {item}
