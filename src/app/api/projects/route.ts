@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
-import type { Project } from "../../../../generated/prisma/client";
+import { error } from "console";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const niche = searchParams.get("niche") ?? undefined;
@@ -28,4 +28,30 @@ export async function GET(req: NextRequest) {
   });
 
   return NextResponse.json(projects);
+}
+
+export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session?.user) {
+    throw NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const body = await req.json();
+
+  const project = await prisma.project.create({
+    data: {
+      projectName: body.projectName,
+      description: body.description,
+      niche: body.niche,
+      repoUrl: body.repoUrl,
+      liveUrl: body.liveUrl,
+      imageUrl: body.imageUrl,
+      version: body.version,
+      startingDate: new Date(body.startingDate),
+      finishedDate: body.finishedDate ? new Date(body.finishedDate) : null,
+      status: body.status ?? "IN_PROGRESS",
+      author: { connect: { email: session.user.email! } },
+    },
+  });
+
+  return NextResponse.json(project, { status: 201 });
 }
