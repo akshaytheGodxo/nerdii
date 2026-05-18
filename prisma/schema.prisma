@@ -7,23 +7,142 @@ datasource db {
     provider = "postgresql"
 }
 
-model Post {
-    id        String  @id @default(cuid())
-    title     String
-    content   String?
-    published Boolean @default(false)
-    author    User?   @relation(fields: [authorId], references: [id])
-    authorId  String?
-}
-
 model User {
     id        String   @id @default(cuid())
     name      String?
+    username  String?  @unique
     email     String?  @unique
     image     String?
-    createdAt DateTime @default(now()) @map(name: "created_at")
-    updatedAt DateTime @updatedAt @map(name: "updated_at")
-    posts     Post[]
+    bio       String?
+    mood      String?
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-    @@map(name: "users")
+    posts    Post[]
+    projects Project[]
+    forums   Forums[]
+    comments Comment[]
+    likes    Like[]
+
+    friendsAdded    Friendship[] @relation("FriendshipRequester")
+    friendsReceived Friendship[] @relation("FriendshipAddressee")
+
+    @@map("users")
+}
+
+model Post {
+    id        String   @id @default(cuid())
+    title     String
+    content   String?
+    published Boolean  @default(false)
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    author   User?     @relation(fields: [authorId], references: [id])
+    authorId String?
+    likes    Like[]
+    comments Comment[]
+}
+
+model Project {
+    id           String        @id @default(cuid())
+    projectName  String
+    description  String?
+    niche        String?
+    repoUrl      String?
+    liveUrl      String?
+    imageUrl     String?
+    version      String?
+    status       ProjectStatus @default(IN_PROGRESS)
+    startingDate DateTime
+    finishedDate DateTime?
+    createdAt    DateTime      @default(now()) @map("created_at")
+    updatedAt    DateTime      @updatedAt @map("updated_at")
+
+    author   User?           @relation(fields: [authorId], references: [id])
+    authorId String?
+    updates  ProjectUpdate[]
+}
+
+model ProjectUpdate {
+    id        String   @id @default(cuid())
+    content   String
+    createdAt DateTime @default(now()) @map("created_at")
+
+    project   Project @relation(fields: [projectId], references: [id])
+    projectId String
+}
+
+model Forums {
+    id        String   @id @default(cuid())
+    title     String
+    content   String
+    images    String[]
+    pinned    Boolean  @default(false)
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    author   User?     @relation(fields: [authorId], references: [id])
+    authorId String?
+    comments Comment[]
+    likes    Like[]
+
+    @@map("forums")
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    content   String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    author   User?   @relation(fields: [authorId], references: [id])
+    authorId String?
+
+    forum   Forums? @relation(fields: [forumId], references: [id])
+    forumId String?
+    post    Post?   @relation(fields: [postId], references: [id])
+    postId  String?
+}
+
+model Like {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now()) @map("created_at")
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    post    Post?   @relation(fields: [postId], references: [id])
+    postId  String?
+    forum   Forums? @relation(fields: [forumId], references: [id])
+    forumId String?
+
+    @@unique([userId, postId])
+    @@unique([userId, forumId])
+}
+
+model Friendship {
+    id        String           @id @default(cuid())
+    status    FriendshipStatus @default(PENDING)
+    createdAt DateTime         @default(now()) @map("created_at")
+
+    requester   User   @relation("FriendshipRequester", fields: [requesterId], references: [id])
+    requesterId String
+    addressee   User   @relation("FriendshipAddressee", fields: [addresseeId], references: [id])
+    addresseeId String
+
+    @@unique([requesterId, addresseeId])
+}
+
+enum ProjectStatus {
+    IN_PROGRESS
+    FINISHED
+    ABANDONED
+    PAUSED
+}
+
+enum FriendshipStatus {
+    PENDING
+    ACCEPTED
+    BLOCKED
 }

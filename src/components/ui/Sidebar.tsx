@@ -17,9 +17,8 @@ import Button from "./Button";
 
 const NAV_LINKS = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Forums", href: "/forums", icon: MessageSquare },
-  { name: "Users", href: "/users", icon: Users },
-  { name: "Archive", href: "/archive", icon: Archive },
+  { name: "My Projects", href: "/my-projects", icon: MessageSquare },
+  { name: "Niches", href: "/niches", icon: Users },
   { name: "Saved", href: "/saved", icon: Bookmark },
 ];
 
@@ -36,11 +35,10 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "h-full bg-surface-lowest border-r-2 border-on-surface flex flex-col transition-all duration-300 ease-in-out relative shrink-0",
+        "min-h-full bg-surface-lowest border-r-2 border-on-surface flex flex-col transition-all duration-300 ease-in-out relative shrink-0",
         open ? "w-56" : "w-12",
       )}
     >
-      {/* Title bar */}
       <div
         className={cn(
           " border-b-2 border-on-surface flex items-center overflow-hidden shrink-0",
@@ -49,7 +47,6 @@ export default function Sidebar() {
       >
         {open ? (
           <div className="flex flex-col w-full p-3 gap-2">
-            {/* Project info row */}
             <div className="flex items-center gap-2">
               <div className="border-2 border-on-background shrink-0">
                 <Image
@@ -73,7 +70,6 @@ export default function Sidebar() {
               </div>
             </div>
 
-            {/* Post update button */}
             <button className="w-full bg-on-primary-fixed-variant border-2 border-on-surface shadow-hard text-on-primary font-heading font-bold text-label-caps uppercase py-2 px-4  transition-colors hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none">
               Post_Update
             </button>
@@ -85,13 +81,12 @@ export default function Sidebar() {
               height={24}
               width={24}
               alt="Project Image"
-              className="block"
+              className="block border-2 border-on-background shrink-0"
             />
           </div>
         )}
       </div>
 
-      {/* Nav links */}
       <nav className="flex flex-col flex-1 overflow-hidden">
         {NAV_LINKS.map(({ name, href, icon: Icon }) => (
           <Link
@@ -110,7 +105,6 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Settings at bottom */}
       <Link
         href="/settings"
         className={cn(
@@ -122,7 +116,6 @@ export default function Sidebar() {
         {open && <span>Settings</span>}
       </Link>
 
-      {/* Toggle button */}
       <button
         onClick={() => setOpen((v) => !v)}
         className="absolute -right-[13px] top-1/2 -translate-y-1/2 w-6 h-6 bg-surface-lowest border-2 border-on-surface shadow-hard-sm flex items-center justify-center cursor-pointer hover:bg-primary hover:text-on-primary z-10"
