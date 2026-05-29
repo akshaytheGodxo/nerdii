@@ -20,8 +20,8 @@ const NAV_LINKS = [
   { name: "My Projects", href: "/my-projects", icon: MessageSquare },
   { name: "Niches", href: "/niches", icon: Users },
   { name: "Saved", href: "/saved", icon: Bookmark },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
-
 const latestProject = {
   name: "",
   version: "V.2.0.4",
@@ -35,13 +35,17 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "min-h-full bg-surface-lowest border-r-2 border-on-surface flex flex-col transition-all duration-300 ease-in-out relative shrink-0",
-        open ? "w-56" : "w-12",
+        "bg-surface-lowest border-on-surface flex transition-all duration-300 ease-in-out z-50",
+
+        "fixed bottom-0 left-0 w-full h-16 border-t-2 flex-row z-40",
+
+        "md:relative md:min-h-screen md:h-screen md:border-t-0 md:border-r-2 md:flex-col md:shrink-0",
+        open ? "md:w-56" : "md:w-12",
       )}
     >
       <div
         className={cn(
-          " border-b-2 border-on-surface flex items-center overflow-hidden shrink-0",
+          " border-b-2 border-on-surface hidden md:flex items-center overflow-hidden shrink-0",
           open ? "min-h-10" : "h-10 justify-center",
         )}
       >
@@ -87,38 +91,54 @@ export default function Sidebar() {
         )}
       </div>
 
-      <nav className="flex flex-col flex-1 overflow-hidden">
+      <nav
+        className={cn(
+          "flex flex-1 overflow-hidden",
+
+          // mobile
+          "flex-row items-center justify-around",
+
+          // desktop
+          "md:flex-col md:items-stretch md:justify-start",
+        )}
+      >
         {NAV_LINKS.map(({ name, href, icon: Icon }) => (
           <Link
             key={name}
             href={href}
             className={cn(
-              "flex items-center gap-3 border-b-2 border-on-surface font-heading font-bold text-body-sm uppercase hover:bg-primary hover:text-on-primary transition-colors shrink-0",
-              open ? "px-3 py-2.5" : "px-0 py-2.5 justify-center",
+              "flex items-center font-heading font-bold uppercase hover:bg-primary hover:text-on-primary transition-colors",
+
+              // mobile
+              "flex-col justify-center gap-1 text-[10px] flex-1 h-full",
+
+              // desktop
+              "md:flex-row md:gap-3 md:border-b-2 md:border-on-surface md:text-body-sm md:flex-none md:h-auto",
+              open
+                ? "md:px-3 md:py-2.5"
+                : "md:px-0 md:py-2.5 md:justify-center",
             )}
           >
-            <Icon size={16} className="shrink-0" />
+            <Icon size={18} className="shrink-0" />
+
+            {/* mobile always visible */}
+            <span className={cn("md:hidden text-[10px]", "whitespace-nowrap")}>
+              {name}
+            </span>
+
+            {/* desktop only when open */}
             {open && (
-              <span className="whitespace-nowrap overflow-hidden">{name}</span>
+              <span className="hidden md:block whitespace-nowrap overflow-hidden">
+                {name}
+              </span>
             )}
           </Link>
         ))}
       </nav>
 
-      <Link
-        href="/settings"
-        className={cn(
-          "flex items-center gap-3 border-t-2 border-on-surface font-heading font-bold text-body-sm uppercase hover:bg-primary hover:text-on-primary transition-colors shrink-0",
-          open ? "px-3 py-2.5" : "px-0 py-2.5 justify-center",
-        )}
-      >
-        <Settings size={16} className="shrink-0" />
-        {open && <span>Settings</span>}
-      </Link>
-
       <button
         onClick={() => setOpen((v) => !v)}
-        className="absolute -right-[13px] top-1/2 -translate-y-1/2 w-6 h-6 bg-surface-lowest border-2 border-on-surface shadow-hard-sm flex items-center justify-center cursor-pointer hover:bg-primary hover:text-on-primary z-10"
+        className="hidden md:flex absolute -right-[13px] top-1/2 -translate-y-1/2 w-6 h-6 bg-surface-lowest border-2 border-on-surface shadow-hard-sm items-center justify-center cursor-pointer hover:bg-primary hover:text-on-primary z-10"
       >
         {open ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
       </button>

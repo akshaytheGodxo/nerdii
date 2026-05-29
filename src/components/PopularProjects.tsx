@@ -15,11 +15,13 @@ export default async function PopularProjects() {
           recent_uploads
         </h1>
         <div className="gap-4 font-heading">
-          <Button className="bg-black text-white">SORT: CHRONO</Button>
+          <Button className="bg-black text-white hover:text-black">
+            SORT: CHRONO
+          </Button>
           <Button className="uppercase">Filter</Button>
         </div>
       </div>
-      <div className="grid md:grid-cols-3 gap-x-6 sm:grid-cols-2 grid-cols-1">
+      <div className="grid md:grid-cols-3 gap-x-6 gap-y-6 sm:grid-cols-2 grid-cols-1 items-start">
         {projects.map((item) => (
           <ProjectCard project={item} key={item.id} updates={item.updates} />
         ))}

@@ -5,11 +5,11 @@ import Image from "next/image";
 import { useState } from "react";
 import { LogOut, User } from "lucide-react";
 import Link from "next/link";
-
+import { getUser } from "@/lib/user";
 export function UserAvatar() {
   const { data: session } = useSession();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const username = session?.user.username;
   if (!session) {
     return (
       <Button
@@ -21,9 +21,7 @@ export function UserAvatar() {
     );
   }
 
-  const username = session.user?.name ?? "User";
   const image = session.user?.image;
-  const initials = username.slice(0, 2).toUpperCase();
 
   return (
     <div className="relative">
@@ -43,7 +41,7 @@ export function UserAvatar() {
           />
         ) : (
           <div className="w-8 h-8 bg-primary text-on-primary font-heading font-bold text-body-sm flex items-center justify-center">
-            {initials}
+            {username?.slice(0, 2).toUpperCase()}
           </div>
         )}
       </button>
@@ -72,7 +70,7 @@ export function UserAvatar() {
 
             {/* Items */}
             <Link
-              href={`/profile/${username}`}
+              href={`/u/${username}`}
               onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-2 px-3 py-2 border-b-2 border-on-surface font-heading font-bold text-body-sm uppercase hover:bg-primary hover:text-on-primary"
             >

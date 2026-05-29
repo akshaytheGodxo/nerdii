@@ -26,13 +26,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`h-full`}>
-      <body className="h-full">
+      <body className="h-full overflow-hidden">
         <SessionProvider>
-          <Navbar />
-          <div className="flex min-h-full">
-            <Sidebar />
+          <div className="flex flex-col h-screen">
+            <Navbar />
 
-            {children}
+            <div className="flex flex-1 overflow-hidden">
+              <Sidebar />
+
+              <main className="flex-1 overflow-y-auto pb-16 md:pb-0">
+                {children}
+              </main>
+            </div>
           </div>
         </SessionProvider>
       </body>
